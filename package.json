@@ -1,0 +1,17 @@
+{
+  "name": "diceroller",
+  "version": "1.0.0",
+  "description": "Brute-force find result of rolling and adding multiple dice",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "clang++ --target=wasm32 --no-standard-libraries -O3 -Wl,--import-memory -Wl,--no-entry src/evaluate.cpp -o dist/evaluate.wasm && webpack"
+  },
+  "author": "Mital Ashok",
+  "license": "MIT",
+  "type": "module",
+  "devDependencies": {
+    "ts-loader": "^9.5.0",
+    "webpack": "^5.89.0",
+    "webpack-cli": "^5.1.4"
+  }
+}
