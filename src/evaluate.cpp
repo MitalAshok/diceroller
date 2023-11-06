@@ -224,7 +224,7 @@ extern "C" void evaluate(const unsigned char* bytecode, uint32_t bytecode_size, 
       BINARY_OPERATOR_COMPOUND(op_ge, >=)
       BINARY_OPERATOR_COMPOUND(op_eq, ==)
       BINARY_OPERATOR_COMPOUND(op_ne, !=)
-      OPERATOR(1, op_min2, *p = ::min(*p, p[amount]))
+      OPERATOR(2, op_min2, *p = ::min(*p, p[amount]))
       OPERATOR(3, op_min3, *p = ::min(*p, p[amount], p[amount*2u]))
       OPERATOR(2, op_max2, *p = ::max(*p, p[amount]))
       OPERATOR(3, op_max3, *p = ::max(*p, p[amount], p[amount*2u]))
