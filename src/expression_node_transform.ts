@@ -483,7 +483,7 @@ const initial_peephole_optimise = (node : tagged_expression_node) : tagged_expre
       const simplified_condition = initial_peephole_optimise({ tag: tag.coerce_bool, operand: condition })
       if (simplified_condition.range !== undefined && if_true.range !== undefined && if_false.range !== undefined) {
         const can_be_false = simplified_condition.range.low === 0
-        const can_be_true = simplified_condition.range.high === 0
+        const can_be_true = simplified_condition.range.high === 1
         if (can_be_false !== can_be_true) {
           // E ? A : B => (E * 0) + A  (where E is true or NaN)
           // E ? A : B => (E * 0) + B  (where E is false or NaN)
