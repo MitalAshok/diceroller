@@ -8,14 +8,6 @@ const memory = new WebAssembly.Memory({ initial: initial_memory })
 const module = await WebAssembly.instantiateStreaming(fetch(wasmData), {
   env: {
     memory,
-    log: (n: bigint) => { console.log(n) },
-    log_string: (s: number) => {
-      let size : number = 0
-      const bytes = new Uint8Array(memory.buffer, s)
-      while (bytes[size] !== 0) ++size;
-      const decoder = new TextDecoder('utf-8')
-      console.log(decoder.decode(new Uint8Array(memory.buffer, s, size)))
-    }
   }
 })
 

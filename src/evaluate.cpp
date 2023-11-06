@@ -50,15 +50,6 @@ extern "C" void seed_engine(random_type seed);
 [[clang::export_name("evaluate")]]
 #endif
 extern "C" void evaluate(const unsigned char* bytecode, uint32_t bytecode_size, int64_t* stack, uint32_t amount);
-// Test import
-#ifdef __wasm__
-[[clang::import_module("env"), clang::import_name("log")]]
-#endif
-extern "C" void log(int64_t);
-#ifdef __wasm__
-[[clang::import_module("env"), clang::import_name("log_string")]]
-#endif
-extern "C" void log_string(const char*);
 
 static_assert(sizeof(uint64_t) == 8, "long long not 64-bit");
 static_assert(~uint64_t{0} == 0xffff'ffff'ffff'ffffULL, "unsigned long long max not 64-bit max");
@@ -213,11 +204,9 @@ template<typename Cmp>
 extern "C" void evaluate(const unsigned char* bytecode, uint32_t bytecode_size, int64_t* stack, uint32_t amount) {
   const unsigned char* const bytecode_end = bytecode + bytecode_size;
   while (bytecode != bytecode_end) {
-    log(*bytecode);
     switch (static_cast<bytecode_value>(*bytecode++)) {
 #define OPERATOR(ARITY, NAME, OP_EXPR) \
       case bytecode_value:: NAME: { \
-        log_string( #NAME ); \
         stack -= (unsigned(ARITY)-1u)*amount; \
         for (int64_t* p = stack-amount; p != stack; ++p) OP_EXPR; \
         break; \
@@ -252,7 +241,6 @@ extern "C" void evaluate(const unsigned char* bytecode, uint32_t bytecode_size, 
         stack += amount;
         uint32_t n = read_constant(bytecode);
         uint32_t sides = read_constant(bytecode);
-        log_string("op_roll_simple"); log(n); log(sides);
         auto roll = get_dice_roller(sides);
         for (int64_t* p = stack-amount; p != stack; ++p) *p = roll();
         if (n != 1u) {
@@ -270,7 +258,6 @@ extern "C" void evaluate(const unsigned char* bytecode, uint32_t bytecode_size, 
         const uint32_t n = read_constant(bytecode);
         const uint32_t sides = read_constant(bytecode);
         const uint32_t keep = read_constant(bytecode);
-        log_string(op == bytecode_value::op_roll_kl ? "op_roll_kl" : "op_roll_kh"); log(n); log(sides); log(keep);
         const ptrdiff_t heap_size = keep;
         const int64_t* const heaps_end = stack + amount*heap_size;
         auto roll = get_dice_roller(sides);
@@ -394,9 +381,6 @@ extern "C" {
 }
 
 #ifndef __wasm__
-
-extern "C" void log(int64_t n) { __builtin_printf("%lld\n", n); }
-extern "C" void log_string(const char* s) { __builtin_printf("%s\n", s); }
 
 int main() {
   // Take from the console. Bytecode (stack_size = ...):, next line is the bytecode

@@ -45,8 +45,6 @@ Throwing 0 dice, keeping 0 dice or dropping all dice results in 0.
 `evaluate.cpp`:
  * Imports:
    * `memory`: Memory (Specified in linker flags, `--import-memory`)
-   * `void log(int64_t n)`: Called to log an integer.
-   * `void log_string(const char* s)`: Called to log a null-terminated string.
  * Exports:
    * `void seed_engine(random_type seed)`: Seeds the PRNG
    * `void evaluate(const unsigned char* bytecode, uint32_t bytecode_size, int64_t* stack, uint32_t amount)`:
