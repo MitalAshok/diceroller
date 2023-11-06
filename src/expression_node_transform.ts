@@ -473,12 +473,12 @@ const initial_peephole_optimise = (node : tagged_expression_node) : tagged_expre
       if (if_true.tag === tag.constant) {
         const t = if_true.amount
         // e ? 0 : n => !e * n
-        if (t === 0) return initial_peephole_optimise({ tag: tag.multiply, left: { tag: tag.boolean_not, operand: condition }, right: make_constant(t) } )
+        if (t === 0) return initial_peephole_optimise({ tag: tag.multiply, left: { tag: tag.boolean_not, operand: condition }, right: if_false } )
       }
       if (if_false.tag === tag.constant) {
         const f = if_false.amount
         // e ? n : 0 => bool(e) * n
-        if (f === 0) return initial_peephole_optimise({ tag: tag.multiply, left: { tag: tag.coerce_bool, operand: condition }, right: make_constant(f) } )
+        if (f === 0) return initial_peephole_optimise({ tag: tag.multiply, left: { tag: tag.coerce_bool, operand: condition }, right: if_true } )
       }
       const simplified_condition = initial_peephole_optimise({ tag: tag.coerce_bool, operand: condition })
       if (simplified_condition.range !== undefined && if_true.range !== undefined && if_false.range !== undefined) {
